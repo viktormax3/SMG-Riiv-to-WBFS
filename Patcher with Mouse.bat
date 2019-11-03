@@ -15,7 +15,7 @@ SET BG_PATH=bin\bg
 SET RIIVDIR=riiv_mods\
 SET Spanish=yes
 SET English=yes
-SET Deutsch=no
+SET Deutsch=yes
 SET f=8GB
 SET f2=4GB
 SET req=800
@@ -507,7 +507,7 @@ GOTO :set_strings2
 
 :NMGX01
 SET name_mod=%NMGX01%
-SET ModName=     I               %name_mod%               I
+SET ModName=     I               %NMGX01%               I
 SET ModDir=.\nmg
 SET ModRiiv=./%riivdir%nmg.riiv
 FOR /F %%4 in ('%witpath% ID6 %isoFile% ') do SET GAMEID=%%4
@@ -518,7 +518,7 @@ GOTO :set_strings2
 
 :M64XHS
 SET name_mod=%M64XHS%
-SET ModName=     I            %name_mod%             I
+SET ModName=     I            %M64XHS%             I
 SET ModDir=.\smg64hs
 SET ModRiiv=./%riivdir%smg64hs.riiv
 FOR /F %%4 in ('%witpath% ID6 %isoFile% ') do SET GAMEID=%%4
@@ -534,7 +534,7 @@ GOTO :set_strings2
 
 :NGSX01
 SET name_mod=%NGSX01%
-SET ModName=     I           %name_mod%            I
+SET ModName=     I           %NGSX01%            I
 SET ModDir=.\ngs
 SET ModRiiv=./%riivdir%ngs.riiv
 FOR /F %%4 in ('%witpath% ID6 %isoFile% ') do SET GAMEID=%%4
@@ -545,7 +545,7 @@ GOTO :set_strings2
 
 :KMGX01
 SET name_mod=%KMGX01%
-SET ModName=     I              %name_mod%              I
+SET ModName=     I              %KMGX01%              I
 SET ModDir=.\kmg
 SET ModRiiv=./%riivdir%kmg.riiv
 FOR /F %%4 in ('%witpath% ID6 %isoFile% ') do SET GAMEID=%%4
@@ -560,7 +560,7 @@ GOTO :set_strings2
 
 :TGSX01
 SET name_mod=%TGSX01%
-SET ModName=     I            %name_mod%             I
+SET ModName=     I            %TGSX01%             I
 SET ModDir=.\tgs
 SET ModRiiv=./%riivdir%tgs.riiv
 FOR /F %%4 in ('%witpath% ID6 %isoFile% ') do SET GAMEID=%%4
@@ -607,7 +607,6 @@ ECHO !header%XX%!
 IF EXIST "./gct/%ID%.gct" (
     ECHO !YesGCT_%XX%!
     %SZSPATH% patch "%WORKDIR%/sys/main.dol" --add-sect "./gct/%ID%.gct" -ovv
-	pause >nul
 ) ELSE (
     COLOR C0
     ECHO !NoGCT_%XX%!
@@ -811,6 +810,7 @@ SET InternalES=%Box_T%!NL!^
     I         Imagen de disco Region %REG%           I!NL!^
     I        Se cambiara el nombre interno a       I
 
+
 GOTO :Build_Mod
 
 :EN_STRINGS
@@ -928,6 +928,7 @@ SET ChangeTMD_EN=%Box_T%!NL!^
 SET InternalEN=%Box_T%!NL!^
     I             %REG% Region Disk Image            I!NL!^
     I     The internal name will be changed to     I
+
 
 GOTO :Build_Mod
 
