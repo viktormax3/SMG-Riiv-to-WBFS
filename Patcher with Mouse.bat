@@ -1,4 +1,5 @@
 @echo off
+chcp 850
 
 REM Bienvenidos a mi desastre
 REM Made In Venezuela
