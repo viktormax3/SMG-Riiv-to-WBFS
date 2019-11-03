@@ -60,11 +60,11 @@ ECHO     I        Contact: viktormax3@gmail.com         I
 ECHO     I                                              I
 ECHO     I     Seleccione el idioma para el Script      I
 ECHO     I     Select the language for the Script       I
-ECHO     I     W„hlen Sie die Sprache fr das Skript    I
+ECHO     I     WÃ¤hlen Sie die Sprache fÃ¼r das Skript    I
 ECHO %Box_B%!NL!
 IF %Spanish% EQU yes (
     SET /A num=num+1 >NUL
-    ECHO %num%^) ES: Espa¤ol
+    ECHO %num%^) ES: EspaÃ±ol
 )
 IF %English% EQU yes (
     SET /A num=num+1 >NUL
@@ -946,4 +946,4 @@ GOTO :Build_Mod
 :set_strings2
 IF /I %XX% EQU ES GOTO :ES_STRINGS2
 IF /I %XX% EQU EN GOTO :EN_STRINGS2
-IF /I %XX% EQU DE GOTO :DE_STRINGS2
+IF /I %XX% EQU DE GOTO :DE_STRIN
