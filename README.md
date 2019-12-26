@@ -8,6 +8,6 @@ You need a backup copy of your original game, but if you don't have it you must 
 
 Download patcher:
 
-	https://github.com/viktormax3/SMG-Riiv-to-WBFS/releases
+	https://github.com/viktormax3/SMG-Riiv-to-WBFS/archive/master.zip
 
 WIP patcher need more fixes for fully working WBFS without dependencies like a ocarina or savegame
