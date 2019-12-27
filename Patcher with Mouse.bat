@@ -662,7 +662,7 @@ IF DEFINED DOWN (
 	SET Gdrive=1w5QexmlJvs9RL7V3ZptR_MO7jBbLs7y2
 	GOTO :GenericDown
 )
-SET Patch=GCT
+SET Patch=XML
 GOTO :GenericSet
 
 :M64X01
@@ -894,28 +894,37 @@ ECHO.
 %WIT% X %IsoFile% -PqD "%WorkDir%" --psel data
 ECHO.
 :: For Memory patches
-IF %Patch%==GCT
-IF %Patch%==XML
 IF %Patch%==No (
 	GOTO :BuildMod
 )
 
 :GenPatch
-SET PatchFile=.\%Patch%\%ID%.%Patch%
+IF "%Patch%"=="GCT" (
+	SET PatchFile=.\%Patch%\%ID%.%Patch%
+)
+IF "%Patch%"=="XML" (
+	SET PatchFile=.\%Patch%\%ModID%.%Patch%
+)
+%RM% "%PatchFile%.tmp" >nul
 CLS
 ECHO !Header%XX%!
 IF EXIST "%PatchFile%" (
-	ECHO !YesGCT_%XX%:NNN=%Patch%!
+	ECHO !YesGCT_%XX%!
 	IF %PATCH%==GCT (
 		%WSTRT% patch "%WorkDir%\sys\main.dol" --add-sect "%PatchFile%" -oPq
 	) ELSE (
 		FOR /F "tokens=* delims=" %%f in ('type %PatchFile%') do CALL :ReplaceXML "%%f"
-		%WIT% DOLPATCH "%WorkDir%\sys\main.dol" "NEW=TEXT,0x80001800,1800" "XML=%PatchFile%.tmp" -o
-		%RM% "%PatchFile%.tmp"
+		%WIT% DOLPATCH "%WorkDir%\sys\main.dol" "NEW=TEXT,0x80001800,1800" "XML=%PatchFile%.tmp" -o >> log.asd
 	)
 ) ELSE (
 	COLOR C0
-	ECHO !NoGCT_%XX%:NNN=%Patch%!
+	SET NoGCT_Replace=
+	SET NoGCT_Replace=!NoGCT_%XX%:NNN=%Patch%!
+	SET NoGCT_Replace=!NoGCT_%XX%:MMM=%ID%!
+	IF "%Patch%"=="XML" (
+		SET NoGCT_Replace=!NoGCT_%XX%:MMM=   %ModID%!
+	)
+	ECHO !NoGCT_Replace!
 	PAUSE >NUL
 	GOTO :Magic
 )
@@ -923,13 +932,14 @@ GOTO :BuildMod
 
 :ReplaceXML
 :: inspired on nsmbw patcher xml replacer i used to set various modes of same mod
+:: XML1 and XML2 not defined at moment 
 SET GenXML=%*
-SET ModXML=!GenXML:%REG%=Memory!
+SET ModXML=!GenXML:%REG%=memory!
 IF DEFINED XML1 (
-	SET ModXML=!ModXML:%XML1%=Memory!
+	SET ModXML=!ModXML:%XML1%=memory!
 )
 IF DEFINED XML2 (
-	SET ModXML=!ModXML:%XML2%=Memory!
+	SET ModXML=!ModXML:%XML2%=memory!
 )
 FOR /F "tokens=* delims=" %%m in ('ECHO %ModXML%') do ECHO %%~m>>%PatchFile%.tmp
 SET XML1=
@@ -1098,10 +1108,10 @@ SET ReqOtherES=    I           Desea aplicar otro mod?            I
 SET NoGCT_ES=%BoxT%!NL!^
     I                    ERROR                     I!NL!^
 %BoxE%!NL!^
-    I          %ID%.NNN No encontrado^^!           I!NL!^
+    I          MMMMMM.NNN No encontrado^^!           I!NL!^
     I       Asegurese de que el archivo .NNN       I!NL!^
     I         este en la carpeta 'NNN' y           I!NL!^
-    I        tenga el nombre %ID%.NNN            I!NL!^
+    I        tenga el nombre MMMMMM.NNN            I!NL!^
 %BoxB%!NL!
 
 SET YesGCT_ES=%BoxT%!NL!^
@@ -1191,10 +1201,10 @@ SET ReqOtherEN=    I        You want to apply another mod?        I
 SET NoGCT_EN=%BoxT%!NL!^
     I                    ERROR                     I!NL!^
 %BoxE%!NL!^
-    I             %ID%.NNN Not Found^^!            I!NL!^
+    I             MMMMMM.NNN Not Found^^!            I!NL!^
     I          Make sure the .NNN file is          I!NL!^
     I             in the 'NNN' folder              I!NL!^
-    I           and has the name %ID%.NNN        I!NL!^
+    I           and has the name MMMMMM.NNN        I!NL!^
 %BoxB%!NL!
 
 SET YesGCT_EN=%BoxT%!NL!^
