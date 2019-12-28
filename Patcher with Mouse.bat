@@ -675,7 +675,7 @@ IF DEFINED DOWN (
 	SET Gdrive=1K8S946TlMnyJYJAriltpQ1GONik-FjfN
 	GOTO :GenericDown
 )
-SET Patch=GCT
+SET Patch=XML
 GOTO :GenericSet
 
 :NGSX01
@@ -700,7 +700,7 @@ IF DEFINED DOWN (
 	SET Gdrive=1aYeP1rC8TiCOKWFIutAX9vC0t4BCxv5O
 	GOTO :GenericDown
 )
-::SET Patch=GCT
+SET Patch=XML
 GOTO :GenericSet
 
 :MG1X01
@@ -814,7 +814,10 @@ IF DEFINED GOTO (
 	GOTO :%GOTO%
 )
 SET BUILD=
-ECHO %RM% "%ModDir%" "%WorkDir%">> %Clear%
+ECHO %RM% "%ModDir%" "%WorkDir%" > %Clear%
+ECHO IF EXIST ".\%NameMod% [%ID%]\*.tmp\" ( >> %Clear%
+ECHO	%RM% ".\%NameMod% [%ID%]\" >> %Clear%
+ECHO	) >> %Clear%
 GOTO :%XX%Strings2
 
 :Md5Func
