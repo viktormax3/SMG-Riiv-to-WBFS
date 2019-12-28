@@ -49,11 +49,11 @@ Pete4747
 
 To the creators of the mods:
 
-Kaizo Mario galaxy: TheGreatWaluigi
-SMG The Green Stars: Laurozz, Thegreatwaluigi
-Neo Mario Galaxy: Aurum and his big team.
-SMG2 The New Green Stars: LAUROZZ
-SMG64 Holiday Special: MeTheMarioMan
-SMG Lost Levels Demo: JasonTGF and his big team.
-Super Mayro Galaxy: MeTheMarioMan
-Super Mayro Galaxy Twoad: MeTheMarioMan
+	Kaizo Mario galaxy: TheGreatWaluigi
+	SMG The Green Stars: Laurozz, Thegreatwaluigi
+	Neo Mario Galaxy: Aurum and his big team.
+	SMG2 The New Green Stars: LAUROZZ
+	SMG64 Holiday Special: MeTheMarioMan
+	SMG Lost Levels Demo: JasonTGF and his big team.
+	Super Mayro Galaxy: MeTheMarioMan
+	Super Mayro Galaxy Twoad: MeTheMarioMan
