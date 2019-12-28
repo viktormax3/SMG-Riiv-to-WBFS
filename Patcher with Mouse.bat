@@ -526,10 +526,10 @@ IF DEFINED NMGX01 (
 		SET GOTO=NMGX01
 	)
 )
-IF DEFINED TLLX01 (
+IF DEFINED M64X01 (
 	%Plus%
 	IF "%Row%"=="%Num%" (
-		SET GOTO=TLLX01
+		SET GOTO=M64X01
 	)
 )
 IF DEFINED NGSX01 (
@@ -538,10 +538,10 @@ IF DEFINED NGSX01 (
 		SET GOTO=NGSX01
 	)
 )
-IF DEFINED M64X01 (
+IF DEFINED TLLX01 (
 	%Plus%
 	IF "%Row%"=="%Num%" (
-		SET GOTO=M64X01
+		SET GOTO=TLLX01
 	)
 )
 IF DEFINED MG1X01 (
@@ -802,6 +802,8 @@ IF "%Patch%"=="" (
 	SET Patch=No
 	)
 )
+:: Any mod work with Korean game :(
+IF "%ID:~3,1%"=="K" GOTO :NoModReg
 IF %ID%==KMGJ01 GOTO :NoModReg
 IF %ID%==TLLJ01 GOTO :NoModReg
 IF %ID%==MG1J01 GOTO :NoModReg
@@ -908,6 +910,14 @@ IF "%Patch%"=="GCT" (
 IF "%Patch%"=="XML" (
 	SET PatchFile=.\%Patch%\%ModID%.%Patch%
 )
+SET NoGCT_Replace=
+SET NoGCT_Replace=!NoGCT_%XX%:NNN=%Patch%!
+IF "%Patch%"=="GCT" (
+	SET NoGCT_Replace=!NoGCT_Replace:MMMMMM=%ID%!
+)
+IF "%Patch%"=="XML" (
+	SET NoGCT_Replace=!NoGCT_Replace:MMMMMM=   %ModID%!
+)
 %RM% "%PatchFile%.tmp" >nul
 CLS
 ECHO !Header%XX%!
@@ -917,16 +927,10 @@ IF EXIST "%PatchFile%" (
 		%WSTRT% patch "%WorkDir%\sys\main.dol" --add-sect "%PatchFile%" -oPq
 	) ELSE (
 		FOR /F "tokens=* delims=" %%f in ('type %PatchFile%') do CALL :ReplaceXML "%%f"
-		%WIT% DOLPATCH "%WorkDir%\sys\main.dol" "NEW=TEXT,0x80001800,1800" "XML=%PatchFile%.tmp" -o >> log.asd
+		%WIT% DOLPATCH "%WorkDir%\sys\main.dol" "NEW=TEXT,0x80001800,1800" "XML=%PatchFile%.tmp" -o >> log_xml.txt
 	)
 ) ELSE (
 	COLOR C0
-	SET NoGCT_Replace=
-	SET NoGCT_Replace=!NoGCT_%XX%:NNN=%Patch%!
-	SET NoGCT_Replace=!NoGCT_%XX%:MMM=%ID%!
-	IF "%Patch%"=="XML" (
-		SET NoGCT_Replace=!NoGCT_%XX%:MMM=   %ModID%!
-	)
 	ECHO !NoGCT_Replace!
 	PAUSE >NUL
 	GOTO :Magic
@@ -952,7 +956,7 @@ SET GenXML=
 EXIT /b
 
 :BuildMod
-:: Evaluar una copia inversa para hacer cola de aplicar mods con una sola descompresion de wbfs
+:: Evaluar una copia inversa para hacer cola, la descompresion depende de ram y cpu y la copia de la velocidad del disco
 :: to copy mod files, banner and saveiconbanner
 ECHO %BoxT%
 ECHO !CopyMod%XX%!
