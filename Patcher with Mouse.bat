@@ -59,7 +59,7 @@ ECHO %BoxT%
 ECHO     I    %NameG% Riivolution to WBFS    I
 ECHO     I        Contact: viktormax3@gmail.com         I
 ECHO %BoxE%
-ECHO     I     WÑhlen Sie die Sprache fÅr das Skript    I
+ECHO     I     W√§hlen Sie die Sprache f√ºr das Skript    I
 ECHO     I     Select the language for the Script       I
 ECHO     I     Seleccione el idioma para el Script      I
 ECHO %BoxB%!NL!
@@ -73,7 +73,7 @@ IF %English%==Yes (
 )
 IF %Spanish%==Yes (
 	%Plus%
-	ECHO %Num%^) Espa§ol
+	ECHO %Num%^) Espa√±ol
 )
 
 :ClickLang
@@ -1099,7 +1099,7 @@ SET DownloadingES=    I         Descargando Mod seleccionado         I
 SET Md5GoodES=    I        Mod descargando correctamente.        I
 SET AllModsES=    I     Tienes todos los mods de este juego.     I
 SET Md5CheckES=    I        Verificando archivo del mod...        I
-SET Md5BadES=    I            Este mod esta da§ado :^(           I
+SET Md5BadES=    I            Este mod esta da√±ado :^(           I
 SET BannerCopyES=    I       Agregando Banner personalizado...      I
 SET NoBannerES=    I No hay Banner personalizado para este mod :^( I
 SET WaitES=    I              Espere un momento.              I
