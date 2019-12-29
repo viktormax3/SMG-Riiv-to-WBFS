@@ -182,6 +182,7 @@ IF NOT EXIST %CFG% (
 	ECHO :: NO EDIT MANUALLY> %CFG%
 	ECHO :Settings>> %CFG%
 	ECHO SET XX=!XX!>> %CFG%
+	ECHO SET SettingsV=!SettingsV!>> %CFG%
 	ECHO SET EXT=!EXT!>> %CFG%
 	ECHO SET Banner=!Banner!>> %CFG%
 	ECHO SET CheckMd5=!CheckMd5!>> %CFG%
