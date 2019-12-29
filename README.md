@@ -6,6 +6,18 @@ This MODS createds by fans with no profit in mind. Super Mario hacks (and mods) 
 
 You need a backup of your original game, but if you don't have it you must buy it
 
+Features:
+	
+	Autodetect game in the patch folder
+	Drag and Drop games
+	Multilingual
+	Auto verify needed free space
+	Mouse clicks to select options
+	Download supported mods from gdrive or dropbox (not configurable at this moment, "gdrive" dafault)
+	Custom banner (currently just for Neo Mario Galaxy, not configurable at this moment, "YES" dafault)
+	Riivolution Mempatch merged to main.dol full working
+	
+
 XML patches applied correct to the follow games:
 
 	Neo Mario Galaxy
@@ -26,6 +38,8 @@ The following mods need a 100% saved game:
 	SMG1 The Green Stars
 	SMG2 The New Green Star
 
+IF you know another mod, please send me a download link :P or name of mod
+
 Download patcher:
 
 	https://github.com/viktormax3/SMG-Riiv-to-WBFS/archive/master.zip
@@ -40,12 +54,17 @@ TODO List
 	German translation
 	Fix the English translation
 	Clean "bin" folder to reduce patcher size
+	Select a daredevil and debug mode in some mods
+	Compile in exe
+	Update without mouse patcher
 
 Acknowledgments:
-Wiimms team by Wiimms ISO Tool
+
+	Wiimms team by Wiimms ISO Tool
 
 The following users of GBATEMP for thoroughly testing this tool:
-Pete4747
+
+	Pete4747
 
 To the creators of the mods:
 
