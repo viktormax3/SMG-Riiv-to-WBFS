@@ -20,6 +20,7 @@ SET udec=bin\udec
 SET "echo=%BG% print"
 SET WGET=bin\wget
 SET Plus=SET /A Num=Num+1
+SET Plus2=SET /A Num2=Num2+1
 SET CFG=.\config.bat
 IF EXIST %CFG% (
 	CALL %CFG%
@@ -28,9 +29,6 @@ IF EXIST %CFG% (
 SET Clear=".\Clear.bat"
 %BG% CURSOR 0
 SET RiivDir=.\riiv_mods\
-SET Deutsch=Yes
-SET English=Yes
-SET Spanish=Yes
 SET BoxT=    /==============================================\
 SET BoxE=    I                                              I
 SET BoxB=    \==============================================/
@@ -48,12 +46,13 @@ SET NL=^
 
 :SelectLang
 IF DEFINED XX (
-	GOTO :%XX%Strings
+	CALL :%XX%Strings
+	GOTO :Magic
 )
 COLOR E0
-SET Num=1
+SET Num=0
 CLS
-:: If you add another language in this echo need a edit SET Num=11 in label :ClickLang to SET Num=12
+:: If you add another language in this echo need a edit SET Num=10 in label :ClickLang to SET Num=11
 ECHO %version%!NL!
 ECHO %BoxT%
 ECHO     I    %NameG% Riivolution to WBFS    I
@@ -63,39 +62,32 @@ ECHO     I     WÑhlen Sie die Sprache fÅr das Skript    I
 ECHO     I     Select the language for the Script       I
 ECHO     I     Seleccione el idioma para el Script      I
 ECHO %BoxB%!NL!
-IF %Deutsch%==Yes (
-	%Plus%
-	ECHO %Num%^) Deutsch
-)
-IF %English%==Yes (
-	%Plus%
-	ECHO %Num%^) English
-)
-IF %Spanish%==Yes (
-	%Plus%
-	ECHO %Num%^) Espa§ol
-)
+
+%Plus%
+ECHO %Num%^) Deutsch
+%Plus%
+ECHO %Num%^) English
+%Plus%
+ECHO %Num%^) Espa§ol
 
 :ClickLang
 CALL :BGFunc
-SET Num=11
-IF %Deutsch%==Yes (
-	%Plus%
-	IF "%Row%"=="%Num%" (
-		GOTO :DEStrings
-	)
+SET Num=10
+%Plus%
+IF "%Row%"=="!Num!" (
+	CALL :DEStrings
 )
-IF %English%==Yes (
-	%Plus%
-	IF "%Row%"=="%Num%" (
-		GOTO :ENStrings
-	)
+%Plus%
+IF "%Row%"=="!Num!" (
+	CALL :ENStrings
 )
-IF %Spanish%==Yes (
-	%Plus%
-	IF "%Row%"=="%Num%" (
-		GOTO :ESStrings
-	)
+%Plus%
+IF "%Row%"=="!Num!" (
+	CALL :ESStrings
+)
+IF DEFINED XX (
+	CALL :%XX%Strings
+	GOTO :Magic
 )
 GOTO :clickLang
 
@@ -139,13 +131,13 @@ IF "%ResetVar%"=="1" (
 SET ResetVar=1
 :: %~1 variable are cleaned after progress script
 IF NOT DEFINED Droped (
-	SET Droped=%~1
+	SET Droped=%~f1
 )
 IF "%Droped%" NEQ "" (
-	%WIT% LS -Hr "%Droped%" | findstr /i "\<RMG \<SB4" >NUL && (
+	%WIT% LS -Hr '%Droped%' | findstr /i "\<RMG \<SB4" >NUL && (
 		COLOR A0
 		ECHO Drag and Drop file
-		%WIT% LS -Hr "%Droped%"
+		%WIT% LS -Hr '%Droped%'
 		%BG% SLEEP 1500
 		SET DropDir=Yes
 	) || (
@@ -174,19 +166,7 @@ ECHO %BoxT%
 ECHO !AutoTry%XX%!
 ECHO %BoxB%
 IF NOT EXIST %CFG% (
-	SET SettingsV=1
-	SET EXT=wbfs
-	SET Banner=Yes
-	SET CheckMd5=Yes
-	SET Server=Gdrive
-	ECHO :: NO EDIT MANUALLY> %CFG%
-	ECHO :Settings>> %CFG%
-	ECHO SET XX=!XX!>> %CFG%
-	ECHO SET SettingsV=!SettingsV!>> %CFG%
-	ECHO SET EXT=!EXT!>> %CFG%
-	ECHO SET Banner=!Banner!>> %CFG%
-	ECHO SET CheckMd5=!CheckMd5!>> %CFG%
-	ECHO SET Server=!Server!>> %CFG%
+	Call :SetConfig
 )
 IF 	"%SettingsV%" NEQ "1" (
 	%RM% %CFG%
@@ -198,7 +178,7 @@ IF "%DropDir%"=="Yes" (
 IF "%DropDir%"=="No" (
 	SET folder=".\\"
 )
-SET WitFlist=%WIT% flist -r %folder% --rdepth 5 -n
+SET WitFlist=%WIT% flist -r %folder% --rdepth 5 -X ".\bin" -n
 FOR /F "delims==" %%1 in ('%WitFlist% RMGE01') do SET E1=%%1& SET F1=1+& SET RMGE=1+
 FOR /F "delims==" %%2 in ('%WitFlist% RMGP01') do SET P1=%%2& SET F1=1+& SET RMGP=1+
 FOR /F "delims==" %%3 in ('%WitFlist% RMGJ01') do SET J1=%%3& SET F1=1+& SET RMGJ=1+
@@ -210,21 +190,20 @@ SET /A Found=%F1%%F2%0
 IF "%Detected%" GEQ "2" (
 	GOTO :IsoFound
 )
-IF "%Found%"=="0" (
+IF %Found%==0 (
 	GOTO :NoGame
 )
-IF "%Found%"=="1" (
+IF %Found%==1 (
 	IF DEFINED E1 SET IsoFile="%E1%"
 	IF DEFINED P1 SET IsoFile="%P1%"
 	IF DEFINED J1 SET IsoFile="%J1%"
-	SET SMG=1
 )
-IF "%Found%"=="2" (
+IF %Found%==2 (
 	IF DEFINED E2 SET IsoFile="%E2%"
 	IF DEFINED P2 SET IsoFile="%P2%"
 	IF DEFINED J2 SET IsoFile="%J2%"
-	SET SMG=2
 )
+SET SMG=%Found%
 GOTO :VerifySpace
 
 :EchoHeader
@@ -246,11 +225,13 @@ IF "%Found%" LEQ "2" (
 IF "%Found%"=="3" (
 	ECHO     I  %NameG% 1  %NameG% 2  I
 )
-ECHO !Found3%XX%!
+ECHO %BoxE%
 EXIT /B
 
 :IsoFound
 CALL :EchoHeader
+ECHO !2Header1%XX%!
+ECHO %BoxB%!NL!
 ECHO !GameDisp%XX%!
 ECHO.
 IF DEFINED E1 (
@@ -284,7 +265,7 @@ ECHO.
 ECHO !ClickOption%XX%!
 :ClickGame
 CALL :BGFunc
-SET Num=21
+SET Num=20
 IF DEFINED E1 (
 	%Plus%
 	IF "%Row%"=="%Num%" (
@@ -336,7 +317,7 @@ IF "%Row%"=="%Num%" (
 )
 %Plus%
 IF "%Row%"=="%Num%" (
-	GOTO :Config
+	GOTO :EchoConfig
 )
 GOTO :ClickGame
 
@@ -492,6 +473,8 @@ EXIT /B
 :EchoModCaller
 SET GOTO=
 CALL :EchoHeader
+ECHO !2Header2%XX%!
+ECHO %BoxB%!NL!
 ECHO !ModDisp%XX%!
 ECHO.
 CALL :SetMod
@@ -513,7 +496,7 @@ GOTO :ClickModCaller
 
 :ClickMods
 CALL :BGFunc
-SET Num=21
+SET Num=20
 IF DEFINED KMGX01 (
 	%Plus%
 	IF "%Row%"=="%Num%" (
@@ -592,9 +575,11 @@ GOTO :ClickModCaller
 
 :DownMods
 CALL :EchoHeader
+ECHO !2Header3%XX%!
+ECHO %BoxB%!NL!
 CALL :ResetVar
 SET Down=NOT
-ECHO !SelMod%XX%!
+ECHO !DownDisp%XX%!
 ECHO.
 CALL :SetMod
 IF DEFINED GOTO (
@@ -602,7 +587,8 @@ IF DEFINED GOTO (
 	GOTO :%GOTO%
 )
 ECHO.
-ECHO R^) !GoBack%XX%!
+ECHO R^) !GoBack%XX%!!NL!
+ECHO !ClickOption%XX%!
 :ClickDown
 CALL :ClickMods
 %Plus%
@@ -615,11 +601,190 @@ IF DEFINED GOTO (
 )
 GOTO :ClickDown
 
-:Config
-ECHO Configuraciones
-ECHO Proximamente
-pause
-goto :magic
+:HeaderConfig
+CALL :EchoHeader
+SET Num=19
+ECHO !2Header4%XX%!
+ECHO %BoxB%
+ECHO.
+ECHO !ConfigSelect%XX%!
+ECHO.
+EXIT /B
+
+:EchoConfig
+CALL :HeaderConfig
+ECHO 1^) !ConfigLanguage%XX%!= %XX%
+ECHO 2^) !ConfigEXT%XX%!= %EXT%
+ECHO 3^) !ConfigBanner%XX%!= %Banner%
+ECHO 4^) !ConfigMD5%XX%!= %CheckMD5%
+ECHO 5^) !ConfigServer%XX%!= %Server%
+ECHO.
+ECHO S^) !ConfigSave%XX%!
+ECHO R^) !GoBack%XX%!!NL!
+ECHO !ClickOption%XX%!
+
+:ClickConfig
+CALL :BGFunc
+SET Num=19
+SET Opc=
+SET Opc1=
+SET Opc2=
+SET Opc3=
+SET Opc4=
+SET Opc5=
+SET OpcX=
+SET NEW=
+%Plus%
+IF "%Row%"=="%Num%" (
+	SET Value=!ConfigLanguage%XX%!
+	SET Opc=XX
+	REM SET Opc1=DE
+	SET Opc2=EN
+	SET Opc3=ES
+)
+%Plus%
+IF "%Row%"=="%Num%" (
+	SET Value=!ConfigEXT%XX%!
+	SET Opc=EXT
+	SET Opc1=wbfs
+	SET Opc2=iso
+	SET Opc3=ciso
+	SET Opc4=wdf
+	SET Opc5=wia
+)
+%Plus%
+IF "%Row%"=="%Num%" (
+	SET Value=!ConfigBanner%XX%!
+	SET Opc=Banner
+	SET Opc1=Yes
+	SET Opc2=No
+)
+%Plus%
+IF "%Row%"=="%Num%" (
+	SET Value=!ConfigMD5%XX%!
+	SET Opc=CheckMD5
+	SET Opc1=Yes
+	SET Opc2=No
+)
+%Plus%
+IF "%Row%"=="%Num%" (
+	SET Value=!ConfigServer%XX%!
+	SET Opc=Server
+	SET Opc1=Gdrive
+	SET Opc2=DropBox
+)
+%Plus%
+%Plus%
+IF "%Row%"=="%Num%" (
+	CALL :SetConfig
+	GOTO :Magic
+)
+%Plus%
+IF "%Row%"=="%Num%" (
+	GOTO :Magic
+)
+IF DEFINED Opc (
+	GOTO :EchoConfig2
+)
+GOTO :ClickConfig
+
+:EchoConfig2
+CALL :HeaderConfig
+SET NUM2=1
+ECHO %Value% !ConfigValue%XX%!= !%Opc%!
+ECHO.
+IF DEFINED Opc1 (
+	%Plus2%
+	ECHO %NUM2%^) %OPC1%
+)
+IF DEFINED Opc2 (
+	%Plus2%
+	ECHO %NUM2%^) %OPC2%
+)
+IF DEFINED Opc3 (
+	%Plus2%
+	ECHO %NUM2%^) %OPC3%
+)
+IF DEFINED Opc4 (
+	%Plus2%
+	ECHO %NUM2%^) %OPC4%
+)
+IF DEFINED Opc5 (
+	%Plus2%
+	ECHO %NUM2%^) %OPC5%
+)
+ECHO.
+ECHO R^) !GoBack%XX%!!NL!
+
+:ClickConfig2
+CALL :BGFunc
+SET Num=22
+IF DEFINED Opc1 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET New=%OPC1%
+	)
+)
+IF DEFINED Opc2 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET New=%OPC2%
+	)
+)
+IF DEFINED Opc3 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET New=%OPC3%
+	)
+)
+IF DEFINED Opc4 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET New=%OPC4%
+	)
+)
+IF DEFINED Opc5 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET New=%OPC5%
+	)
+)
+%Plus%
+IF "%Row%"=="%Num%" (
+	GOTO :EchoConfig
+)
+IF DEFINED New (
+	SET %OPC%=%New%
+	IF "%OPC%"=="XX" (
+		CALL :!XX!Strings
+	)
+	GOTO :EchoConfig
+)
+GOTO :ClickConfig2
+
+:SetConfig
+SET SettingsV=1
+IF NOT DEFINED EXT (
+	SET EXT=wbfs
+)
+IF NOT DEFINED Banner (
+	SET Banner=Yes
+)
+IF NOT DEFINED CheckMd5 (
+	SET CheckMd5=Yes
+)
+IF NOT DEFINED Server (
+	SET Server=Gdrive
+)
+ECHO :: NO EDIT MANUALLY> %CFG%
+ECHO :Settings>> %CFG%
+ECHO SET XX=!XX!>> %CFG%
+ECHO SET SettingsV=!SettingsV!>> %CFG%
+ECHO SET EXT=!EXT!>> %CFG%
+ECHO SET Banner=!Banner!>> %CFG%
+ECHO SET CheckMd5=!CheckMd5!>> %CFG%
+ECHO SET Server=!Server!>> %CFG%
+EXIT /B
 
 :NoGame
 :: Agregar aqui un retry y salir en caso de que se necesite para no forzar la salida
@@ -735,17 +900,17 @@ GOTO :GenericSet
 
 :GenericDown
 IF "%api%"=="" (
-	echo begin 0666 api!NL!^
+ECHO begin 0666 api!NL!^
 M/V%%L=#UM961I829K97D]04EZ85-Y1^&QJ4D5O:6YB63EB4U1W-'^^!'3E9Q;U4Q!NL!^
 )4G^^!K1SEE9$LX!NL!^
 `!NL!^
 end!NL!>>asd
-	%udec% asd>Nul
-	FOR /F %%u in ('type api') do set "api=%%u"
+	%udec% asd>NUL
+	FOR /F %%u in ('type api') do SET "api=%%u"
 	%RM% api asd
 )
-SET "GdriveLink=https://www.googleapis.com/drive/v3/files/%GDrive%%api%"
-SET DropBoxLink=https://dropbox.com/sh/33bnoa9u49z3grm/%DropBox%/%ModID%.riiv?dl=1
+SET "GdriveLink=https://www.googleapis.com/drive/v3/files/%Gdrive%%api%"
+SET DropBoxLink=https://DropBox.com/sh/33bnoa9u49z3grm/%DropBox%/%ModID%.riiv?dl=1
 CLS
 IF NOT EXIST %RiivDir% (
 	MD %RiivDir%
@@ -758,7 +923,7 @@ ECHO %BoxE%
 ECHO %ModName%
 ECHO %BoxB%
 ECHO.
-SET ModRiiv="%RiivDir%%ModID%.riiv.temp"
+SET ModRiiv="%RiivDir%%ModID%.riiv.tmp"
 %WGET% --no-check-certificate "!%Server%Link!" -O %ModRiiv% -q --show-progress -t 3 && (
 	CALL :Md5Func
 	IF "!BAD!"=="Yes" (
@@ -787,7 +952,7 @@ IF NOT DEFINED GOTO (
 GOTO :%GOTO%
 
 :GenericSet
-:: agregar una verificacion de conexion a internet mediante ping a el servidor de descarga seleccionado 
+:: agregar una verificacion de conexion a internet mediante ping a el servidor de descarga seleccionado
 SET GameID=
 FOR /F %%4 in ('%WIT% ID %IsoFile%') do SET GameID=%%4
 IF "%GameID%"=="" (
@@ -808,7 +973,7 @@ IF "%Patch%"=="" (
 	SET Patch=No
 	)
 )
-:: Any mod work with Korean game :(
+:: Any mod work with Korean game at moment :(
 IF "%ID:~3,1%"=="K" GOTO :NoModReg
 IF %ID%==KMGJ01 GOTO :NoModReg
 IF %ID%==TLLJ01 GOTO :NoModReg
@@ -945,7 +1110,7 @@ GOTO :BuildMod
 
 :ReplaceXML
 :: inspired on nsmbw patcher xml replacer i used to set various modes of same mod
-:: XML1 and XML2 not defined at moment 
+:: XML1 and XML2 not defined at moment
 SET GenXML=%*
 SET ModXML=!GenXML:%REG%=memory!
 IF DEFINED XML1 (
@@ -1078,16 +1243,23 @@ SET NoGameFoundES=    I        Imagen de disco no encontrada.        I!NL!^
 
 SET Found1ES=    I               Juego encontrado               I
 SET Found2ES=    I              Juegos encontrados              I
-SET Found3ES=%BoxE%!NL!^
-    I    1^) Seleccione su juego                    I!NL!^
-    I    2^) Seleccione el mod que desea aplicar.   I!NL!^
-%BoxB%!NL!
-
+SET 2Header1ES=    I             Seleccione su juego.             I
+SET 2Header2ES=    I     Seleccione el mod que desea aplicar.     I
+SET 2Header3ES=    I    Seleccione el mod que desea descargar.    I
+SET 2Header4ES=    I  Seleccione una opci¢n que desee modificar.  I
 SET GameDispES=Juegos disponibles:
-SET ModDispES=Mods Disponibles:
-SET SelModES=Elige un Mod:
+SET ModDispES=Mods disponibles:
+SET DownDispES=Descargas disponibles:
 SET DownModES=Descargar Mods
 SET RefreshES=Buscar de nuevo
+SET ConfigSelectES=Opciones disponibles
+SET ConfigEXTES=Formato de salida de mods
+SET ConfigValueES=actual
+SET ConfigLanguageES=Idioma
+SET ConfigBannerES=Uso de banner personalizado
+SET ConfigMD5ES=Verificacion MD5 de los mods
+SET ConfigServerES=Servidor de descarga
+SET ConfigSaveES=Guardar
 SET GoBackES=Volver
 Set GoCfgES=Ajustes
 SET ExitES=Salir
@@ -1100,9 +1272,8 @@ SET NoSpaceES=%BoxT%!NL!^
 
 SET NoModsES=    I            No se encontraron mods            I
 SET RegModNoES=    I      Mod no disponible para esta region      I
-SET DownSelectES=    I    Seleccione el mod que desea descargar.     I
 SET DownloadingES=    I         Descargando Mod seleccionado         I
-SET Md5GoodES=    I        Mod descargando correctamente.        I
+SET Md5GoodES=    I        Mod descargado correctamente.         I
 SET AllModsES=    I     Tienes todos los mods de este juego.     I
 SET Md5CheckES=    I        Verificando archivo del mod...        I
 SET Md5BadES=    I            Este mod esta da§ado :^(           I
@@ -1138,7 +1309,7 @@ SET ReadyES=%BoxT%!NL!^
     I           Clickea aqui para salir.           I!NL!^
 %BoxB%!NL!
 
-GOTO :Magic
+EXIT /B
 
 :ESStrings2
 
@@ -1171,16 +1342,24 @@ SET NoGameFoundEN=    I             Disk image not Found.            I!NL!^
 
 SET Found1EN=    I                  Game Found                  I
 SET Found2EN=    I                 Games Found                  I
-SET Found3EN=%BoxE%!NL!^
-    I    1^) Select your game                       I!NL!^
-    I    2^) Select the mod you want to apply.      I!NL!^
-%BoxB%!NL!
-
-SET GameDispEN=Games available:
+SET 2Header1EN=    I               Select your game               I
+SET 2Header2EN=    I       Select the mod you want to apply       I
+SET 2Header3EN=    I     Select the mod you want to download      I
+SET 2Header4EN=    I      Select an option you want to modify     I
+SET GameDispEN=Available games:
 SET ModDispEN=Available Mods:
+SET DownDispEN=Available downloads:
 SET SelModEN=Choose a Mod:
 SET DownModEN=Download Mods
 SET RefreshEN=Search again
+SET ConfigSelectEN=Available option
+SET ConfigEXTEN=Mods output format
+SET ConfigValueEN=current
+SET ConfigLanguageEN=Language
+SET ConfigBannerEN=Custom banner
+SET ConfigMD5EN=Mods verify MD5
+SET ConfigServerEN=Download server
+SET ConfigSaveEN=Save
 SET GoBackEN=Go back
 Set GoCfgEN=Settings
 SET ExitEN=Exit
@@ -1193,9 +1372,8 @@ SET NoSpaceEN=%BoxT%!NL!^
 
 SET NoModsEN=    I                No mods Found                 I
 SET RegModNoEN=    I      Mod not available for this region.      I
-SET DownSelectEN=    I    Seleccione el mod que desea descargar.     I
 SET DownloadingEN=    I           Downloading Mod selected           I
-SET Md5GoodEN=    I        Mod descargando correctamente.        I
+SET Md5GoodEN=    I         Mod downloaded successfully.         I
 SET AllModsEN=    I     You have all the mods of this game.      I
 SET Md5CheckEN=    I             Checking mod file ...            I
 SET Md5BadEN=    I            This mod is damaged :^(            I
@@ -1230,8 +1408,7 @@ SET ReadyEN=%BoxT%!NL!^
 %BoxE%!NL!^
     I              Click here to exit.             I!NL!^
 %BoxB%!NL!
-
-GOTO :Magic
+EXIT /B
 
 :ENStrings2
 SET ChangeID_EN=%BoxT%!NL!^
@@ -1246,7 +1423,7 @@ ECHO Language is not yet available, help me to translate
 ECHO Click anything
 %BG% mouse >NUL
 SET XX=
-GOTO :SelectLang
+EXIT /B
 ::Clear up lines before translate
 :: Deutsch lines
 :: No Edit format
@@ -1255,7 +1432,7 @@ GOTO :SelectLang
 :: SET VariableXX=4 spaces I   46 characters fill with spaces to center   I
 :: Replace "variableXX" to "variableDE" or another first two letters of translated language like a PT, IT
 SET XX=DE
-GOTO :Magic
+EXIT /B
 
 :DEStrings2
 :: Deutsch lines 2
