@@ -560,7 +560,7 @@ IF "%Detected%" GEQ "2" (
 	)
 ) ELSE (
 	IF "%Row%"=="%Num%" (
-		SET GOTO=Config
+		SET GOTO=EchoConfig
 	)
 )
 %Plus%
