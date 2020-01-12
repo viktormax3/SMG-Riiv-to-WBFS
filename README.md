@@ -11,10 +11,11 @@ Features:
 	Autodetect game in the patch folder
 	Drag and Drop games
 	Multilingual
+	Configurable options
 	Auto verify needed free space
 	Mouse clicks to select options
-	Download supported mods from gdrive or dropbox (not configurable at this moment, "gdrive" dafault)
-	Custom banner (currently just for Neo Mario Galaxy, not configurable at this moment, "YES" dafault)
+	Download supported mods from gdrive or dropbox
+	Custom banner (currently just for Neo Mario Galaxy)
 	Riivolution Mempatch merged to main.dol full working
 	
 
@@ -50,7 +51,6 @@ TODO List
 
 	Queuing of games patch
 	Game patch queue
-	The configuration is applied by default, it is necessary to create a configuration menu
 	German translation
 	Fix the English translation
 	Clean "bin" folder to reduce patcher size
