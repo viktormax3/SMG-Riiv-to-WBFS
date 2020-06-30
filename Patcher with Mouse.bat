@@ -47,7 +47,7 @@ SET NL=^
 :SelectLang
 IF DEFINED XX (
 	CALL :%XX%Strings
-	GOTO :Magic
+	GOTO Magic
 )
 COLOR E0
 SET Num=0
@@ -87,9 +87,9 @@ IF "%Row%"=="!Num!" (
 )
 IF DEFINED XX (
 	CALL :%XX%Strings
-	GOTO :Magic
+	GOTO Magic
 )
-GOTO :clickLang
+GOTO clickLang
 
 :ResetVar
 SET E1=
@@ -118,6 +118,16 @@ SET NGSX01=
 SET TLLX01=
 SET MG1X01=
 SET MG2X01=
+::nuevos
+SET 1SCX01=
+SET 2P5X01=
+SET 2SCX01=
+SET CCCX01=
+SET CCGX01=
+SET MGDX01=
+SET MGRX01=
+SET MGSX01=
+SET MSSX01=
 EXIT /B
 
 :Magic
@@ -170,7 +180,7 @@ IF NOT EXIST %CFG% (
 )
 IF 	"%SettingsV%" NEQ "1" (
 	%RM% %CFG%
-	GOTO :Magic
+	GOTO Magic
 )
 IF "%DropDir%"=="Yes" (
 	SET folder="%Droped%"
@@ -188,10 +198,10 @@ FOR /F "delims==" %%6 in ('%WitFlist% SB4J01') do SET J2=%%6& SET F2=2+& SET SB4
 SET /A Detected=%RMGE%%RMGP%%RMGJ%%SB4E%%SB4P%%SB4J%0
 SET /A Found=%F1%%F2%0
 IF "%Detected%" GEQ "2" (
-	GOTO :IsoFound
+	GOTO IsoFound
 )
 IF %Found%==0 (
-	GOTO :NoGame
+	GOTO NoGame
 )
 IF %Found%==1 (
 	IF DEFINED E1 SET IsoFile="%E1%"
@@ -204,7 +214,7 @@ IF %Found%==2 (
 	IF DEFINED J2 SET IsoFile="%J2%"
 )
 SET SMG=%Found%
-GOTO :VerifySpace
+GOTO VerifySpace
 
 :EchoHeader
 CLS
@@ -309,17 +319,17 @@ IF DEFINED J2 (
 	)
 )
 IF "%SMG%" NEQ "" (
-	GOTO :VerifySpace
+	GOTO VerifySpace
 )
 %Plus%
 IF "%Row%"=="%Num%" (
-	GOTO :Magic
+	GOTO Magic
 )
 %Plus%
 IF "%Row%"=="%Num%" (
-	GOTO :EchoConfig
+	GOTO EchoConfig
 )
-GOTO :ClickGame
+GOTO ClickGame
 
 :VerifySpace
 :: Verify the free space to build mods
@@ -362,10 +372,10 @@ IF %len% LSS 4 (
 	CALL :NoSpace
 )
 IF DEFINED GOTO (
-	GOTO :%GOTO%
+	GOTO %GOTO%
 )
 COLOR E0
-GOTO :EchoModCaller
+GOTO EchoModCaller
 
 :NoSpace
 CLS
@@ -373,7 +383,7 @@ COLOR C0
 ECHO !Header%XX%!
 ECHO !NoSpace%XX%:XXX=%ReqS%!
 ECHO !Space! !Unit!
-GOTO :ClickSpace
+GOTO ClickSpace
 EXIT /B
 
 ::Falta poner retry y volver
@@ -387,7 +397,7 @@ IF %Row% GTR 11 (
 IF DEFINED GOTO (
 	EXIT /B
 )
-GOTO :ClickSpace
+GOTO ClickSpace
 
 :SetMod
 SET Num=0
@@ -435,6 +445,51 @@ IF "%SMG%"=="2" (
 		!Plus!
 		ECHO !Num!^) !MG2X01!
 	)
+	IF %Down% EXIST "%RiivDir%1sc.riiv" (
+		SET 1SCX01=SMG2 Season Cycles
+		!Plus!
+		ECHO !Num!^) !1SCX01!
+	)
+	IF %Down% EXIST "%RiivDir%2p5.riiv" (
+		SET 2P5X01=SMG2.5 Demo
+		!Plus!
+		ECHO !Num!^) !2P5X01!
+	)
+	IF %Down% EXIST "%RiivDir%2sc.riiv" (
+		SET 2SCX01=SMG2 Season Cycles 2
+		!Plus!
+		ECHO !Num!^) !2SCX01!
+	)
+	IF %Down% EXIST "%RiivDir%ccc.riiv" (
+		SET CCCX01=SMG2 Cosmic Clones Challenge
+		!Plus!
+		ECHO !Num!^) !CCCX01!
+	)
+	IF %Down% EXIST "%RiivDir%ccg.riiv" (
+		SET CCGX01=Cosmic Caverns Galaxy
+		!Plus!
+		ECHO !Num!^) !CCGX01!
+	)
+	IF %Down% EXIST "%RiivDir%mgd.riiv" (
+		SET MGDX01=Super Mario Galaxy Deluxe
+		!Plus!
+		ECHO !Num!^) !MGDX01!
+	)
+	IF %Down% EXIST "%RiivDir%mgr.riiv" (
+		SET MGRX01=Super Mario Gravity
+		!Plus!
+		ECHO !Num!^) !MGRX01!
+	)
+	IF %Down% EXIST "%RiivDir%mgs.riiv" (
+		SET MGSX01=Secret Mario Galaxy
+		!Plus!
+		ECHO !Num!^) !MGSX01!
+	)
+	IF %Down% EXIST "%RiivDir%mss.riiv" (
+		SET MSSX01=SMG Shine Sprite
+		!Plus!
+		ECHO !Num!^) !MSSX01!
+	)
 )
 IF "%Down%" NEQ "NOT" (
 	IF "!NUM!"=="0" (
@@ -480,7 +535,7 @@ ECHO.
 CALL :SetMod
 IF DEFINED GOTO (
 	SET GOTO=
-	GOTO :%GOTO%
+	GOTO %GOTO%
 )
 ECHO.
 ECHO D^) !DownMod%XX%!
@@ -492,7 +547,7 @@ IF "%Detected%" GEQ "2" (
 ECHO X^) !Exit%XX%!
 ECHO.
 ECHO !ClickOption%XX%!
-GOTO :ClickModCaller
+GOTO ClickModCaller
 
 :ClickMods
 CALL :BGFunc
@@ -545,6 +600,61 @@ IF DEFINED MG2X01 (
 		SET GOTO=MG2X01
 	)
 )
+
+IF DEFINED 1SCX01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=1SCX01
+	)
+)
+IF DEFINED 2P5X01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=2P5X01
+	)
+)
+IF DEFINED 2SCX01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=2SCX01
+	)
+)
+IF DEFINED CCCX01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=CCCX01
+	)
+)
+IF DEFINED CCGX01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=CCGX01
+	)
+)
+IF DEFINED MGDX01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=MGDX01
+	)
+)
+IF DEFINED MGRX01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=MGRX01
+	)
+)
+IF DEFINED MGSX01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=MGSX01
+	)
+)
+IF DEFINED MSSX01 (
+	%Plus%
+	IF "%Row%"=="%Num%" (
+		SET GOTO=MSSX01
+	)
+)
 EXIT /B
 
 :ClickModCaller
@@ -560,7 +670,7 @@ IF "%Detected%" GEQ "2" (
 	)
 ) ELSE (
 	IF "%Row%"=="%Num%" (
-		SET GOTO=EchoConfig
+		SET GOTO=Config
 	)
 )
 %Plus%
@@ -569,9 +679,9 @@ IF "%Row%"=="%Num%" (
 )
 IF DEFINED GOTO (
 	SET GOTO=
-	GOTO :%GOTO%
+	GOTO %GOTO%
 )
-GOTO :ClickModCaller
+GOTO ClickModCaller
 
 :DownMods
 CALL :EchoHeader
@@ -584,7 +694,7 @@ ECHO.
 CALL :SetMod
 IF DEFINED GOTO (
 	SET GOTO=
-	GOTO :%GOTO%
+	GOTO %GOTO%
 )
 ECHO.
 ECHO R^) !GoBack%XX%!!NL!
@@ -597,9 +707,9 @@ IF "%Row%"=="%Num%" (
 )
 IF DEFINED GOTO (
 	SET GOTO=
-	GOTO :%GOTO%
+	GOTO %GOTO%
 )
-GOTO :ClickDown
+GOTO ClickDown
 
 :HeaderConfig
 CALL :EchoHeader
@@ -677,16 +787,16 @@ IF "%Row%"=="%Num%" (
 %Plus%
 IF "%Row%"=="%Num%" (
 	CALL :SetConfig
-	GOTO :Magic
+	GOTO Magic
 )
 %Plus%
 IF "%Row%"=="%Num%" (
-	GOTO :Magic
+	GOTO Magic
 )
 IF DEFINED Opc (
-	GOTO :EchoConfig2
+	GOTO EchoConfig2
 )
-GOTO :ClickConfig
+GOTO ClickConfig
 
 :EchoConfig2
 CALL :HeaderConfig
@@ -751,16 +861,16 @@ IF DEFINED Opc5 (
 )
 %Plus%
 IF "%Row%"=="%Num%" (
-	GOTO :EchoConfig
+	GOTO EchoConfig
 )
 IF DEFINED New (
 	SET %OPC%=%New%
 	IF "%OPC%"=="XX" (
 		CALL :!XX!Strings
 	)
-	GOTO :EchoConfig
+	GOTO EchoConfig
 )
-GOTO :ClickConfig2
+GOTO ClickConfig2
 
 :SetConfig
 SET SettingsV=1
@@ -806,9 +916,9 @@ SET Md5sum=0A10D5690375FB24AA81149C13C1F69C
 IF DEFINED DOWN (
 	SET DropBox=AACb04fuPlg9H1VG4jRYZk4Ha
 	SET Gdrive=1U-J3WKqj6cUsBEzwVgKk5G3nthVlkY8U
-	GOTO :GenericDown
+	GOTO GenericDown
 )
-GOTO :GenericSet
+GOTO GenericSet
 
 :TGSX01
 SET ModID=TGS
@@ -818,9 +928,9 @@ SET Md5sum=BEE78D7664EA8C1625B261AAE622483F
 IF DEFINED DOWN (
 	SET DropBox=AABhquMqqj-QVfVVAFgld67ma
 	SET Gdrive=14tV91noGAK6E1FE8V3tXT-WRfeUmdc9q
-	GOTO :GenericDown
+	GOTO GenericDown
 )
-GOTO :GenericSet
+GOTO GenericSet
 
 :: Super Mario Galaxy 2 MODS
 :NMGX01
@@ -831,10 +941,10 @@ SET Md5sum=61BA060C537AC05C27A719C657B088BA
 IF DEFINED DOWN (
 	SET DropBox=AAAi1RDwXS5k-d7zFE2htPc0a
 	SET Gdrive=1w5QexmlJvs9RL7V3ZptR_MO7jBbLs7y2
-	GOTO :GenericDown
+	GOTO GenericDown
 )
 SET Patch=XML
-GOTO :GenericSet
+GOTO GenericSet
 
 :M64X01
 SET ModID=M64
@@ -844,10 +954,10 @@ SET Md5sum=4FBD0EE4181CD02DFA1E8E605EF75AE1
 IF DEFINED DOWN (
 	SET DropBox=AAC_5nt_Zz1K0aMQ2B6fRc_6a
 	SET Gdrive=1K8S946TlMnyJYJAriltpQ1GONik-FjfN
-	GOTO :GenericDown
+	GOTO GenericDown
 )
 SET Patch=XML
-GOTO :GenericSet
+GOTO GenericSet
 
 :NGSX01
 SET ModID=NGS
@@ -857,9 +967,9 @@ SET Md5sum=D1F1713EE94076F2DE4AD700AE2C76AB
 IF DEFINED DOWN (
 	SET DropBox=AAAAybY9pPkfa9hpa73JW9wpa
 	SET Gdrive=1fjiHOSgBpg0sXybBsoC5y9YN2Z_RLG3I
-	GOTO :GenericDown
+	GOTO GenericDown
 )
-GOTO :GenericSet
+GOTO GenericSet
 
 :TLLX01
 SET ModID=TLL
@@ -869,10 +979,10 @@ SET Md5sum=1BAC43B1AA2016B3C83742D771837EC7
 IF DEFINED DOWN (
 	SET DropBox=AAB5L7DDess9r6hykGMu53dfa
 	SET Gdrive=1aYeP1rC8TiCOKWFIutAX9vC0t4BCxv5O
-	GOTO :GenericDown
+	GOTO GenericDown
 )
 SET Patch=XML
-GOTO :GenericSet
+GOTO GenericSet
 
 :MG1X01
 SET ModID=MG1
@@ -882,9 +992,9 @@ SET Md5sum=2EA854CBDFE07AB04C710AA78AEB3E4E
 IF DEFINED DOWN (
 	SET DropBox=AABAWYFs3DeNMUyQlwzndI_Ba
 	SET Gdrive=1N54aRxUri3m_L9hDQNvU_Z167S5w34cn
-	GOTO :GenericDown
+	GOTO GenericDown
 )
-GOTO :GenericSet
+GOTO GenericSet
 
 :MG2X01
 SET ModID=MG2
@@ -894,9 +1004,9 @@ SET Md5sum=57ED1678FB9FC166AD814B2D99C08CD6
 IF DEFINED DOWN (
 	SET DropBox=AAC-zR-EYuiqdHgX_63YyjMja
 	SET Gdrive=16iRd_ZSqy6c_C_jI1235OHx1hes3Iw-C
-	GOTO :GenericDown
+	GOTO GenericDown
 )
-GOTO :GenericSet
+GOTO GenericSet
 
 :GenericDown
 IF "%api%"=="" (
@@ -929,7 +1039,7 @@ SET ModRiiv="%RiivDir%%ModID%.riiv.tmp"
 	IF "!BAD!"=="Yes" (
 		%RM% %ModRiiv%
 		SET BAD=
-		GOTO :!GOTO!
+		GOTO !GOTO!
 	)
 	MOVE %ModRiiv% "%RiivDir%%ModID%.riiv" >NUL
 	ECHO %BoxT%
@@ -943,20 +1053,20 @@ SET ModRiiv="%RiivDir%%ModID%.riiv.tmp"
 IF DEFINED BUILD (
 	SET BUILD=
 	SET DOWN=
-	GOTO :%ModID%X01
+	GOTO %ModID%X01
 )
 IF NOT DEFINED GOTO (
 	%BG% SLEEP 2500 >NUL
-	GOTO :DownMods
+	GOTO DownMods
 )
-GOTO :%GOTO%
+GOTO %GOTO%
 
 :GenericSet
 :: agregar una verificacion de conexion a internet mediante ping a el servidor de descarga seleccionado
 SET GameID=
 FOR /F %%4 in ('%WIT% ID %IsoFile%') do SET GameID=%%4
 IF "%GameID%"=="" (
-	GOTO :NoGame
+	GOTO NoGame
 )
 SET ModRiiv="%RiivDir%%ModID%.riiv"
 SET ID=%ModID%%GameID:~3,3%
@@ -974,24 +1084,24 @@ IF "%Patch%"=="" (
 	)
 )
 :: Any mod work with Korean game at moment :(
-IF "%ID:~3,1%"=="K" GOTO :NoModReg
-IF %ID%==KMGJ01 GOTO :NoModReg
-IF %ID%==TLLJ01 GOTO :NoModReg
-IF %ID%==MG1J01 GOTO :NoModReg
-IF %ID%==MG2J01 GOTO :NoModReg
+IF "%ID:~3,1%"=="K" GOTO NoModReg
+IF %ID%==KMGJ01 GOTO NoModReg
+IF %ID%==TLLJ01 GOTO NoModReg
+IF %ID%==MG1J01 GOTO NoModReg
+IF %ID%==MG2J01 GOTO NoModReg
 SET WorkDir=.\%ID%-FST
 SET ModdedFile=".\%NameMod% [%ID%]\%ID%.%EXT%"
 CALL :Md5Func
 IF DEFINED GOTO (
 	SET BUILD=Yes
-	GOTO :%GOTO%
+	GOTO %GOTO%
 )
 SET BUILD=
 ECHO %RM% "%ModDir%" "%WorkDir%" > %Clear%
 ECHO IF EXIST ".\%NameMod% [%ID%]\*.tmp\" ( >> %Clear%
 ECHO	%RM% ".\%NameMod% [%ID%]\" >> %Clear%
 ECHO	) >> %Clear%
-GOTO :%XX%Strings2
+GOTO %XX%Strings2
 
 :Md5Func
 SET GOTO=
@@ -1040,7 +1150,7 @@ IF %Row%==13 (
 IF DEFINED GOTO (
 	EXIT /B
 )
-GOTO :DownExit
+GOTO DownExit
 
 :NoModReg
 COLOR C0
@@ -1049,7 +1159,7 @@ CLS
 ECHO !RegModNo%XX%!
 %BoxB%
 %BG% SLEEP 1500 >NUL
-GOTO :Magic
+GOTO Magic
 
 :Extract
 COLOR A0
@@ -1071,7 +1181,7 @@ ECHO.
 ECHO.
 :: For Memory patches
 IF %Patch%==No (
-	GOTO :BuildMod
+	GOTO BuildMod
 )
 
 :GenPatch
@@ -1104,9 +1214,9 @@ IF EXIST "%PatchFile%" (
 	COLOR C0
 	ECHO !NoGCT_Replace!
 	PAUSE >NUL
-	GOTO :Magic
+	GOTO Magic
 )
-GOTO :BuildMod
+GOTO BuildMod
 
 :ReplaceXML
 :: inspired on nsmbw patcher xml replacer i used to set various modes of same mod
@@ -1193,7 +1303,7 @@ CALL :BGFunc
 IF %Row%==20 (
 	IF %Col% LSS 26 (
 		IF %Col% GTR 4 (
-			GOTO :Magic
+			GOTO Magic
 		)
 	)
 	IF %Col% GTR 29 (
@@ -1209,11 +1319,11 @@ IF %Row%==20 (
 					EXIT
 				)
 			)
-			GOTO :ClickNo
+			GOTO ClickNo
 		)
 	)
 )
-GOTO :ClickYN
+GOTO ClickYN
 
 :BGFunc
 %BG% MOUSE >NUL
@@ -1318,7 +1428,7 @@ SET ChangeID_ES=%BoxT%!NL!^
     I     Se cambiara el ID de %GameID% a %ID%     I!NL!^
     I          Se cambiara el TMD a %TMD%           I!NL!^
     I        Se cambiara el nombre interno a       I
-GOTO :Extract
+GOTO Extract
 
 :ENStrings
 SET XX=EN
@@ -1416,7 +1526,7 @@ SET ChangeID_EN=%BoxT%!NL!^
     I   ID will be changed from %GameID% to %ID%   I!NL!^
     I          TMD will be changed to %TMD%         I!NL!^
     I     The internal name will be changed to     I
-GOTO :Extract
+GOTO Extract
 
 :DEStrings
 ECHO Language is not yet available, help me to translate
@@ -1437,4 +1547,4 @@ EXIT /B
 :DEStrings2
 :: Deutsch lines 2
 SET YesNoDE=E0 "    I" A0 "          Ja         " E0 "I  I" C0 "         Nein        " E0 "I    "
-GOTO :Extract
+GOTO Extract
